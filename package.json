@@ -1,0 +1,16 @@
+{
+  "name": "coverloop",
+  "private": true,
+  "version": "0.1.0",
+  "//": [
+    "Root package exists ONLY to run server + client with one command.",
+    "All real dependencies live in server/package.json and client/package.json."
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,green \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "typecheck": "npm --prefix server run typecheck && npm --prefix client run typecheck"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}

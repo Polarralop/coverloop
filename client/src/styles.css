@@ -1,0 +1,24 @@
+/* ============================================================================
+   styles.css — single stylesheet for the whole client
+   ----------------------------------------------------------------------------
+   Imported once in main.tsx. Suggested class map (referenced from the
+   component headers):
+
+     .app              — page container (max-width, centered, padding)
+     .error            — error banner (App renders it under the search bar)
+     .album-grid       — responsive grid, e.g.
+                         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr))
+     .album-card       — cover image + text; cursor: pointer
+     .album-card.selected — the "picked" highlight (border/checkmark)
+     .selection-tray   — horizontal flex strip, overflow-x: auto
+     .favourite-badge  — "first frame" marker on the favourite
+     .speed-control    — slider + readout row
+     .gif-preview      — result box; keep a fixed aspect placeholder so the
+                         layout doesn't jump when the GIF appears
+
+   Design note for when you get here: give this thing a point of view —
+   album art is the hero content, so a quiet, dark, gallery-like backdrop
+   that lets the covers carry the color tends to beat a busy chrome.
+   ========================================================================== */
+
+/* TODO: styles. A minimal reset + the classes above will carry phase 1. */

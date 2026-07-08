@@ -1,0 +1,27 @@
+{
+  "name": "coverloop-client",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "//": [
+    "Vite compiles TS/TSX natively but does NOT typecheck - that's what the",
+    "`tsc --noEmit` in the build script (and the typecheck script) is for."
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "typescript": "^5.6.0",
+    "vite": "^8.1.3"
+  }
+}

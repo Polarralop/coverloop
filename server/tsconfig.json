@@ -1,0 +1,23 @@
+{
+  "//": [
+    "Server tsconfig. There is NO compile step: `tsx` runs the .ts files",
+    "directly (dev and start). tsc exists purely as the typechecker",
+    "(npm run typecheck), hence noEmit.",
+    "moduleResolution 'bundler' matches how tsx resolves extension-less",
+    "ESM imports. If you ever switch to a real `tsc` build for production,",
+    "change module/moduleResolution to 'NodeNext' and add .js extensions",
+    "to relative imports - that's the one gotcha of this setup."
+  ],
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src"]
+}

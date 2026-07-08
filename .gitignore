@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.env
+*.gif
+.DS_Store

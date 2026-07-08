@@ -1,0 +1,21 @@
+{
+  "//": [
+    "Client tsconfig - standard Vite + React setup.",
+    "noEmit: Vite does the actual transpiling; tsc is typecheck-only.",
+    "moduleResolution 'bundler': lets imports omit file extensions.",
+    "strict: on. It will complain about untyped props etc. - that's the point."
+  ],
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src", "vite.config.ts"]
+}
