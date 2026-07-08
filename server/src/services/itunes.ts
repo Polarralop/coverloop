@@ -50,3 +50,42 @@
 // ============================================================================
 
 // TODO: implement searchAlbums(term, limit) as described above.
+
+import type {Album, ItunesResult} from '../types.ts';
+
+export async function searchAlbums(term: string, limit = 20): Promise<Album[]> {
+
+    interface ItunesSearchResponse {
+        resultCount: number;
+        results: ItunesResult[];
+    }
+
+
+    // Accessing iTunes API
+    const url = new URL('https://itunes.apple.com/search');
+    url.searchParams.set('term', term);
+    url.searchParams.set('entity', 'album');
+    url.searchParams.set('limit', String(limit));
+
+    const pong = await fetch(url);
+    if (!pong.ok) {
+        throw new Error(`iTunes API Error: ${pong.status}`);
+    }
+    
+    const data = (await pong.json()) as ItunesSearchResponse;
+    const albums: Album[] = data.results
+    .filter((r: ItunesResult) => r.collectionId && r.artworkUrl100)
+    .map((r: ItunesResult) => ({
+        id: r.collectionId!,
+        title: r.collectionName!,
+        artist: r.artistName!,
+        artworkUrl: r.artworkUrl100!,
+        artworkUrlHiRes: r.artworkUrl100!.replace('100x100bb', '500x500bb'),
+    }));
+
+
+    return albums;
+
+}
+
+
