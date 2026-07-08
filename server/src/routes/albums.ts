@@ -13,7 +13,7 @@
 //   502 → { error: '...' }                     (iTunes upstream failed)
 //
 // WHAT GOES IN HERE
-//   1. const router = express.Router()
+//   1. const router = Router()
 //   2. router.get('/search', async (req, res, next) => { ... })
 //        - read req.query.term (reject if empty/whitespace)
 //        - clamp limit to something sane (default 20, max ~50)
@@ -29,6 +29,30 @@
 // ============================================================================
 
 import { Router } from 'express';
-// import { searchAlbums } from '../services/itunes';
+import { searchAlbums } from '../services/itunes';
 
-// TODO: implement router as described above.
+const router = Router();
+router.get('/search', async (req, res, next) => {
+    try {
+        const rawTerm = req.query.term;
+        if (typeof rawTerm !== 'string' || rawTerm.trim().length === 0) {
+            return res.status(400).json({ error: 'term is required' });
+        }
+        const term = rawTerm.trim();
+
+        const rawLimit = req.query.limit;
+        const limit = rawLimit === undefined ? 20 : Number(rawLimit); // blank = 20
+        if (Number.isNaN(limit)) {
+            return res.status(400).json ({ error: 'limit is required' });
+        }
+        if (limit > 50 || limit < 1) {
+            return res.status(400).json({ error: 'limit must be between 1-50'})
+        }
+
+        const albums = await searchAlbums(term, limit);
+        res.json({ albums });
+    } catch (err) {next(err);}
+
+})
+
+export default router;
