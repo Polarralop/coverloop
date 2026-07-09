@@ -18,7 +18,7 @@ export async function searchAlbums(term: string, limit = 20): Promise<Album[]> {
 
   interface MusicBrainzSearchResponse {
     'release-groups': MusicBrainzResult[];
-    }
+  }
 
   const data = (await pong.json()) as MusicBrainzSearchResponse;
   const albums: Album[] = data['release-groups']

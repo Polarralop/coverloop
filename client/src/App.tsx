@@ -57,7 +57,7 @@
 
 import { useState } from 'react';
 import type { Album, CreateGifRequest } from './types';
-import { searchAlbums, createGif } from './api/client';
+import { searchAlbums, createGif, searchAlbumsDiscogs } from './api/client';
 import SearchBar from './components/SearchBar';
 import AlbumGrid from './components/AlbumGrid';
 import SelectionTray from './components/SelectionTray';
@@ -73,6 +73,7 @@ export default function App() {
   const [frameDelayMs, setFrameDelayMs] = useState<number>(500);
   const [gifUrl, setGifUrl] = useState<string | null>(null);
   const [isBuilding, setIsBuilding] = useState(false);
+  const [lastSearchTerm, setLastSearchTerm] = useState('');
   const [error, setError] = useState<string | null>(null);
   
 
@@ -84,12 +85,25 @@ export default function App() {
 
   const handleSearch = async (term: string) => {
     setIsSearching(true);
+    setLastSearchTerm(term);
     setError(null);
     try {
       const albums = await searchAlbums(term);
       setSearchResults(albums);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Search failed');
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleSearchDiscogs = async () => {
+    setIsSearching(true);
+    try {
+      const albums = await searchAlbumsDiscogs(lastSearchTerm);
+      setSearchResults((prev) => [...prev, ...albums]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Discogs search failed");
     } finally {
       setIsSearching(false);
     }
@@ -158,6 +172,7 @@ export default function App() {
         selected={selectedAlbums}
         loading={isSearching}
         onToggle={toggleAlbum}
+        onSearchDiscogs={handleSearchDiscogs}
       />
       <SelectionTray 
         albums={selectedAlbums}

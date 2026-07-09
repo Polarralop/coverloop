@@ -35,6 +35,12 @@ export interface MusicBrainzResult {
   'artist-credit'?: { name: string }[];
 }
 
+export interface DiscogsResult {
+  id: number;
+  title?: string;          // combined "Artist - Album Title"
+  cover_image?: string;
+  thumb?: string;
+}
 /** One normalized RGBA frame produced by imageFetcher, consumed by gifBuilder. */
 export interface Frame {
   data: Buffer;    // raw RGBA pixels (4 channels), FRAME_SIZE x FRAME_SIZE
