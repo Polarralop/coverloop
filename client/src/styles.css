@@ -22,3 +22,45 @@
    ========================================================================== */
 
 /* TODO: styles. A minimal reset + the classes above will carry phase 1. */
+
+.album-card p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.album-card {
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.album-card.selected {
+  border-color: #4a9eff;
+}
+
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.hint {
+  color: #888;
+  font-size: 0.9rem;
+  font-style: italic;
+  text-align: center;
+  padding: 2rem 0;
+}
+.skeleton-card {
+  width: 140px;
+  height: 140px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+
+
+@keyframes pulse {
+  50% { opacity: 0.5; }
+}

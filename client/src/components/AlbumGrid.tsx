@@ -19,7 +19,7 @@
 // ============================================================================
 
 import type { Album } from '../types';
-// import AlbumCard from './AlbumCard';
+import AlbumCard from './AlbumCard';
 
 interface Props {
   results: Album[];                  // App.searchResults
@@ -29,6 +29,30 @@ interface Props {
 }
 
 export default function AlbumGrid({ results, selected, loading, onToggle }: Props) {
-  // TODO
-  return null;
+  if (loading) {
+    return (
+      <div className="album-grid">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="skeleton-card" />
+        ))}
+      </div>
+    );
+  }
+
+  if (results.length === 0) {
+    return <p className="hint">no albums found. try another search.</p>;
+  }
+
+  return(
+    <div className="album-grid">
+      {results.map(album => (
+        <AlbumCard 
+          key={album.id}
+          album={album}
+          isSelected={selected.some(a => a.id === album.id)}
+          onToggle={onToggle}
+        />
+      ))}
+    </div>
+  );
 }
