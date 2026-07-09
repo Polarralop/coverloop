@@ -29,7 +29,7 @@
 // ============================================================================
 
 import { Router } from 'express';
-import { searchAlbums } from '../services/itunes';
+import { searchAlbums } from '../services/musicbrainz';
 
 const router = Router();
 router.get('/search', async (req, res, next) => {
@@ -43,7 +43,7 @@ router.get('/search', async (req, res, next) => {
         const rawLimit = req.query.limit;
         const limit = rawLimit === undefined ? 20 : Number(rawLimit); // blank = 20
         if (Number.isNaN(limit)) {
-            return res.status(400).json ({ error: 'limit is required' });
+            return res.status(400).json ({ error: 'limit is invalid' });
         }
         if (limit > 50 || limit < 1) {
             return res.status(400).json({ error: 'limit must be between 1-50'})

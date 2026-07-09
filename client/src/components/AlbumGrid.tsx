@@ -32,7 +32,7 @@ export default function AlbumGrid({ results, selected, loading, onToggle }: Prop
   if (loading) {
     return (
       <div className="album-grid">
-        {Array.from({ length: 8 }).map((_, i) => (
+        {Array.from({ length: 20 }).map((_, i) => (
           <div key={i} className="skeleton-card" />
         ))}
       </div>

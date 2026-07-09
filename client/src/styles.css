@@ -23,6 +23,10 @@
 
 /* TODO: styles. A minimal reset + the classes above will carry phase 1. */
 
+.app {
+  padding-bottom: 140px; /* roughly the tray's height, adjust to match */
+}
+
 .album-card p {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -32,6 +36,13 @@
 .album-card {
   border: 2px solid transparent;
   cursor: pointer;
+}
+
+.album-card img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px;
 }
 
 .album-card.selected {
@@ -57,6 +68,46 @@
   background: #e0e0e0;
   border-radius: 4px;
   animation: pulse 1.5s ease-in-out infinite;
+}
+
+.selection-tray {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 12px 4px;
+
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #1a1a1a;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.tray-item {
+  position: relative;
+  flex: 0 0 auto;
+  width: 100px;
+  text-align: center;
+}
+
+.tray-item img {
+  width: 100px;
+  height: 100px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.favourite-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: #4a9eff;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
 

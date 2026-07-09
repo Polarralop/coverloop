@@ -14,7 +14,7 @@
 
 /** Normalized album sent to the client. */
 export interface Album {
-  id: number;
+  id: number | string;
   title: string;
   artist: string;
   artworkUrl: string;
@@ -29,14 +29,10 @@ export interface CreateGifRequest {
   frameDelayMs: number;
 }
 
-/** The subset of a raw iTunes Search API result item that itunes.ts reads.
- *  Fields are optional because the API omits them sometimes — the mapper
- *  in itunes.ts should filter out incomplete entries. */
-export interface ItunesResult {
-  collectionId?: number;
-  collectionName?: string;
-  artistName?: string;
-  artworkUrl100?: string;
+export interface MusicBrainzResult {
+  id: string;
+  title?: string;
+  'artist-credit'?: { name: string }[];
 }
 
 /** One normalized RGBA frame produced by imageFetcher, consumed by gifBuilder. */

@@ -60,44 +60,80 @@ import type { Album } from './types';
 import { searchAlbums } from './api/client';
 import SearchBar from './components/SearchBar';
 import AlbumGrid from './components/AlbumGrid';
+import SelectionTray from './components/SelectionTray';
+import SpeedControl from './components/SpeedControl';
 
 export default function App() {
   // TODO: state, handlers, and render tree as described above.
   const [searchResults, setSearchResults] = useState<Album[]>([]);
   const [selectedAlbums, setSelectedAlbums] = useState<Album[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [favouriteId, setFavouriteId] = useState<number | null>(null);
+  const [frameDelayMs, setFrameDelayMs] = useState<number>(500);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSearch = async (term: string) => {
-      setIsSearching(true);
-      setError(null);
-      try {
-        const albums = await searchAlbums(term);
-        setSearchResults(albums);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Search failed');
-      } finally {
-        setIsSearching(false);
-      }
-    };
+  const setFavourite = (albumId: number | null) => {
+    setFavouriteId(albumId);
+  };
+  
 
-    const toggleAlbum = (album: Album) => {
-      setSelectedAlbums((prev) =>
-        prev.some((a) => a.id === album.id)
-          ? prev.filter((a) => a.id !== album.id)
-          : [...prev, album]
-      );
-    };
+
+  const handleSearch = async (term: string) => {
+    setIsSearching(true);
+    setError(null);
+    try {
+      const albums = await searchAlbums(term);
+      setSearchResults(albums);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Search failed');
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleSpeed = (frameDelay: number) => {
+    setFrameDelayMs(frameDelay);
+  };
+
+
+  const toggleAlbum = (album: Album) => {
+    const isCurrentlySelected = selectedAlbums.some((a) => a.id === album.id);
+
+      if (isCurrentlySelected && favouriteId === album.id) {
+        // removing the current favourite
+        const remaining = selectedAlbums.filter((a) => a.id !== album.id);
+        setFavourite(remaining.length > 0 ? remaining[0].id : null);
+      } else if (!isCurrentlySelected && selectedAlbums.length === 0) {
+        // adding the very first album
+        setFavourite(album.id);
+      }
+
+    setSelectedAlbums((prev) =>
+      prev.some((a) => a.id === album.id)
+        ? prev.filter((a) => a.id !== album.id)
+        : [...prev, album]
+    );
+    
+  };
+
+
 
   return (
     <div className="app">
       <SearchBar onSearch={handleSearch} />
       {error && <div className="error">{error}</div>}
+      <SpeedControl valueMs={frameDelayMs} onChange={handleSpeed}/>
       <AlbumGrid
         results={searchResults}
         selected={selectedAlbums}
         loading={isSearching}
         onToggle={toggleAlbum}
+      />
+      <SelectionTray 
+        albums={selectedAlbums}
+        favouriteId={favouriteId}
+        onSetFavourite={setFavourite}
+        onRemove={toggleAlbum}
       />
     </div>
   );
