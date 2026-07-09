@@ -42,11 +42,4 @@ export interface Frame {
   height: number;
 }
 
-// NOTE on gifenc: it ships no official TypeScript types. Easiest fix — a
-// gifenc.d.ts next to this file:
-//   declare module 'gifenc' {
-//     export function GIFEncoder(): any;
-//     export function quantize(data: Uint8Array | Buffer, maxColors: number): number[][];
-//     export function applyPalette(data: Uint8Array | Buffer, palette: number[][]): Uint8Array;
-//   }
-// (Tighten the `any` later if you feel like it; it's a tiny surface.)
+

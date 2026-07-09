@@ -17,7 +17,7 @@
 
 /** One album as returned by GET /api/albums/search (normalized iTunes data). */
 export interface Album {
-  id: number;             // iTunes collectionId
+  id: number | string;             // iTunes collectionId
   title: string;          // collectionName
   artist: string;         // artistName
   artworkUrl: string;     // 100x100 thumbnail — use in the grid

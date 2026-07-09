@@ -110,7 +110,30 @@
   border-radius: 4px;
 }
 
+.gif-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
 
+.gif-preview img {
+  max-width: 100%;
+  width: 500px;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+}
+
+.gif-preview a {
+  color: #4a9eff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.gif-preview a:hover {
+  text-decoration: underline;
+}
 
 @keyframes pulse {
   50% { opacity: 0.5; }

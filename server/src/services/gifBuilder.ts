@@ -66,7 +66,29 @@
 //   - client/.../OverlayUpload.tsx (phase-2 source of overlayPng)
 // ============================================================================
 
-// import { GIFEncoder, quantize, applyPalette } from 'gifenc';
-// import { FRAME_SIZE } from './imageFetcher';
+import { FRAME_SIZE } from './imageFetcher';
+import type { Frame } from '../types';
+import * as gifencModule from 'gifenc';
+const { GIFEncoder, quantize, applyPalette } = (gifencModule as any).default;
+
+export async function buildGif(
+    frames: Frame[],
+    options: { frameDelayMs: number }
+): Promise<Uint8Array> {
+    const gif = GIFEncoder();
+
+  for (const frame of frames) {
+    const palette = quantize(frame.data, 256);
+    const indexed = applyPalette(frame.data, palette);
+
+    gif.writeFrame(indexed, FRAME_SIZE, FRAME_SIZE, {
+      palette,
+      delay: options.frameDelayMs,
+    });
+  }
+
+  gif.finish();
+  return gif.bytes();
+}
 
 // TODO: implement buildGif(frames, options) as described above.

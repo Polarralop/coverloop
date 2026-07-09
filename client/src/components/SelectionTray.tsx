@@ -26,8 +26,8 @@ import type { Album } from '../types';
 
 interface Props {
   albums: Album[];                       // App.selectedAlbums (in frame order)
-  favouriteId: number | null;            // App.favouriteId
-  onSetFavourite: (albumId: number) => void;
+  favouriteId: number | string | null;            // App.favouriteId
+  onSetFavourite: (albumId: number | string) => void;
   onRemove: (album: Album) => void;      // App.toggleAlbum (reused for removal)
 }
 

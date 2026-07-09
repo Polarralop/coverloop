@@ -56,23 +56,27 @@
 // ============================================================================
 
 import { useState } from 'react';
-import type { Album } from './types';
-import { searchAlbums } from './api/client';
+import type { Album, CreateGifRequest } from './types';
+import { searchAlbums, createGif } from './api/client';
 import SearchBar from './components/SearchBar';
 import AlbumGrid from './components/AlbumGrid';
 import SelectionTray from './components/SelectionTray';
 import SpeedControl from './components/SpeedControl';
+import GifPreview from './components/GifPreview';
 
 export default function App() {
   // TODO: state, handlers, and render tree as described above.
   const [searchResults, setSearchResults] = useState<Album[]>([]);
   const [selectedAlbums, setSelectedAlbums] = useState<Album[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [favouriteId, setFavouriteId] = useState<number | null>(null);
+  const [favouriteId, setFavouriteId] = useState<number | string | null>(null);
   const [frameDelayMs, setFrameDelayMs] = useState<number>(500);
+  const [gifUrl, setGifUrl] = useState<string | null>(null);
+  const [isBuilding, setIsBuilding] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
 
-  const setFavourite = (albumId: number | null) => {
+  const setFavourite = (albumId: number | string | null) => {
     setFavouriteId(albumId);
   };
   
@@ -93,6 +97,32 @@ export default function App() {
 
   const handleSpeed = (frameDelay: number) => {
     setFrameDelayMs(frameDelay);
+  };
+
+  const handleBuildGif = async () => {
+    setIsBuilding(true);
+    setError(null);
+
+    try {
+      const payload: CreateGifRequest = {
+        artworkUrls: selectedAlbums.map((a) => a.artworkUrlHiRes),
+        favouriteIndex: selectedAlbums.findIndex((a) => a.id === favouriteId),
+        frameDelayMs: frameDelayMs,
+      }
+      const newGifUrl = await createGif(payload)
+
+      if (gifUrl) {
+        URL.revokeObjectURL(gifUrl);
+      }
+
+      setGifUrl(newGifUrl);
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message: 'GIF generation failed');
+    } finally {
+      setIsBuilding(false);
+    }
+
   };
 
 
@@ -122,7 +152,7 @@ export default function App() {
     <div className="app">
       <SearchBar onSearch={handleSearch} />
       {error && <div className="error">{error}</div>}
-      <SpeedControl valueMs={frameDelayMs} onChange={handleSpeed}/>
+      <SpeedControl valueMs={frameDelayMs} onChange={handleSpeed} />
       <AlbumGrid
         results={searchResults}
         selected={selectedAlbums}
@@ -135,6 +165,11 @@ export default function App() {
         onSetFavourite={setFavourite}
         onRemove={toggleAlbum}
       />
+      <button disabled={selectedAlbums.length < 2 || isBuilding} onClick={handleBuildGif}>
+        Make GIF
+      </button>
+      <GifPreview gifUrl={gifUrl} building={isBuilding} />
+
     </div>
   );
 }

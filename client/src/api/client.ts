@@ -39,6 +39,8 @@
 
 // TODO: implement searchAlbums + createGif as described above.
 import type { Album } from '../types';
+import type { CreateGifRequest } from '../types';
+
 export async function searchAlbums(term: string, limit = 20): Promise<Album[]>{
     const params = new URLSearchParams({term, limit: String(limit)});
     const pong = await fetch(`/api/albums/search?${params}`);
@@ -52,4 +54,19 @@ export async function searchAlbums(term: string, limit = 20): Promise<Album[]>{
 
     const data = (await pong.json()) as albumSearchResponse;
     return data.albums;
+}
+
+export async function createGif(payload: CreateGifRequest): Promise<string> {
+  const pong = await fetch('/api/gif', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!pong.ok) {
+    throw new Error(`GIF creation failed: ${pong.status}`);
+  }
+
+  const blob = await pong.blob();
+  return URL.createObjectURL(blob);
 }

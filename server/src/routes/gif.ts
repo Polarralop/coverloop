@@ -44,7 +44,46 @@
 // ============================================================================
 
 import { Router } from 'express';
-// import { fetchAndNormalize } from '../services/imageFetcher';
-// import { buildGif } from '../services/gifBuilder';
+import { fetchAndNormalize } from '../services/imageFetcher';
+import { buildGif } from '../services/gifBuilder';
 
-// TODO: implement router as described above.
+const router = Router();
+router.post('/', async (req, res, next) => {
+    try {
+        const { artworkUrls, favouriteIndex, frameDelayMs } = req.body;
+
+        if (!Array.isArray(artworkUrls) || artworkUrls.length < 2) {
+            return res.status(400).json({ error: 'at least 2 artworkUrls are required' });
+        }
+
+        if (artworkUrls.length > 20) {
+        return res.status(400).json({ error: 'too many artworkUrls (max 20)' });
+        }
+        if (
+            typeof favouriteIndex !== 'number' ||
+            favouriteIndex < 0 ||
+            favouriteIndex >= artworkUrls.length
+        ) {
+            return res.status(400).json({ error: 'favouriteIndex is out of range' });
+        }
+
+        const delay = typeof frameDelayMs === 'number' ? frameDelayMs : 500;
+        const clampedDelay = Math.min(2000, Math.max(100, delay));
+
+        const favourite = artworkUrls[favouriteIndex];
+        const before = artworkUrls.slice(0, favouriteIndex);
+        const after = artworkUrls.slice(favouriteIndex + 1);
+
+        const orderedUrls = [favourite, ...after, ...before];
+
+        const frames = await fetchAndNormalize(orderedUrls);
+        const gif = await buildGif(frames, { frameDelayMs: clampedDelay });
+        res.set('Content-Type', 'image/gif').send(Buffer.from(gif));
+        res.send(Buffer.from(gif))
+
+    } catch (err) { next(err); }
+
+
+});
+
+export default router;
