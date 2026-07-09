@@ -55,11 +55,50 @@
 //   - every file in components/
 // ============================================================================
 
-// import { useState } from 'react';
-// import { searchAlbums, createGif } from './api/client';
-// ...component imports...
+import { useState } from 'react';
+import type { Album } from './types';
+import { searchAlbums } from './api/client';
+import SearchBar from './components/SearchBar';
+import AlbumGrid from './components/AlbumGrid';
 
 export default function App() {
   // TODO: state, handlers, and render tree as described above.
-  return <div className="app">Coverloop — build me!</div>;
+  const [searchResults, setSearchResults] = useState<Album[]>([]);
+  const [selectedAlbums, setSelectedAlbums] = useState<Album[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSearch = async (term: string) => {
+      setIsSearching(true);
+      setError(null);
+      try {
+        const albums = await searchAlbums(term);
+        setSearchResults(albums);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Search failed');
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    const toggleAlbum = (album: Album) => {
+      setSelectedAlbums((prev) =>
+        prev.some((a) => a.id === album.id)
+          ? prev.filter((a) => a.id !== album.id)
+          : [...prev, album]
+      );
+    };
+
+  return (
+    <div className="app">
+      <SearchBar onSearch={handleSearch} />
+      {error && <div className="error">{error}</div>}
+      <AlbumGrid
+        results={searchResults}
+        selected={selectedAlbums}
+        loading={isSearching}
+        onToggle={toggleAlbum}
+      />
+    </div>
+  );
 }
