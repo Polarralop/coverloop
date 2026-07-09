@@ -38,3 +38,18 @@
 // ============================================================================
 
 // TODO: implement searchAlbums + createGif as described above.
+import type { Album } from '../types';
+export async function searchAlbums(term: string, limit = 20): Promise<Album[]>{
+    const params = new URLSearchParams({term, limit: String(limit)});
+    const pong = await fetch(`/api/albums/search?${params}`);
+    if (!pong.ok) {
+        throw new Error(`Album API Error: ${pong.status}`);
+    }
+
+    interface albumSearchResponse {
+        albums: Album[];
+    }
+
+    const data = (await pong.json()) as albumSearchResponse;
+    return data.albums;
+}

@@ -54,13 +54,6 @@
 import type {Album, ItunesResult} from '../types.ts';
 
 export async function searchAlbums(term: string, limit = 20): Promise<Album[]> {
-
-    interface ItunesSearchResponse {
-        resultCount: number;
-        results: ItunesResult[];
-    }
-
-
     // Accessing iTunes API
     const url = new URL('https://itunes.apple.com/search');
     url.searchParams.set('term', term);
@@ -72,6 +65,11 @@ export async function searchAlbums(term: string, limit = 20): Promise<Album[]> {
         throw new Error(`iTunes API Error: ${pong.status}`);
     }
     
+    interface ItunesSearchResponse {
+        resultCount: number;
+        results: ItunesResult[];
+    }
+
     const data = (await pong.json()) as ItunesSearchResponse;
     const albums: Album[] = data.results
     .filter((r: ItunesResult) => r.collectionId && r.artworkUrl100)
