@@ -118,7 +118,10 @@ export default function App() {
 
   return (
     <div className="app">
+      <title>coverloop</title>
+      <p>turn covers into a looping gif</p>
       <SearchBar onSearch={handleSearch} />
+      <p>it's highly suggested to search by artist. album search algo. is wonky right now; less likely to produce what you're looking for.</p>
       {error && <div className="error">{error}</div>}
       <AlbumGrid
         results={searchResults}
