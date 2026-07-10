@@ -21,7 +21,7 @@ router.post('/', upload.single('overlay'),async (req, res, next) => {
         }
 
         if (artworkUrls.length > 20) {
-        return res.status(400).json({ error: 'too many artworkUrls (max 20)' });
+            return res.status(400).json({ error: 'too many artworkUrls (max 20)' });
         }
         if (
             typeof favouriteIndex !== 'number' ||

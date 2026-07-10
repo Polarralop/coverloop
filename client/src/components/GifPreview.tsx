@@ -13,7 +13,7 @@ export default function GifPreview({ gifUrl, building }: Props) {
   }
   return (
     <div className="gif-preview">
-      <img src={gifUrl} alt="Your album GIF" />
+      <a href={gifUrl}><img src={gifUrl} alt="Your album GIF" /></a>
       <a href={gifUrl} download="coverloop.gif">download</a>
     </div>
   );
