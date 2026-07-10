@@ -1,9 +1,11 @@
 import type { Album } from '../types';
 import type { CreateGifRequest } from '../types';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '';
+
 async function sendSearchParams(term: string, limit = 20, endPoint: string): Promise<Album[]> {
   const params = new URLSearchParams({ term, limit: String(limit) });
-  const pong = await fetch(`/api/albums/${endPoint}?${params}`);
+  const pong = await fetch(`${API_BASE}/api/albums/${endPoint}?${params}`);
   if (!pong.ok) {
     throw new Error(`Album API Error: ${pong.status}`);
   }
@@ -34,7 +36,7 @@ export async function createGif(payload: CreateGifRequest, overlayFile?: File | 
     formData.append('overlay', overlayFile);
   }
 
-  const pong = await fetch('/api/gif', {
+  const pong = await fetch(`${API_BASE}/api/gif`, {
     method: 'POST',
     body: formData,
   });

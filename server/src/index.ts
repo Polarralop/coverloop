@@ -1,9 +1,17 @@
 import 'dotenv/config';
 import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
 import albumsRouter from './routes/albums';
 import gifRouter from './routes/gif';
 
 const app = express();
+
+// Only the deployed client may call this API cross-origin. Add more origins
+// (e.g. a custom domain) to the array as needed. Dev uses the Vite proxy, so
+// it's same-origin and never hits CORS.
+const allowedOrigins = ['https://coverloop.vercel.app'];
+app.use(cors({ origin: allowedOrigins }));
+
 app.use(express.json());
 
 app.use('/api/albums', albumsRouter);
