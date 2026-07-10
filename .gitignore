@@ -3,3 +3,4 @@ dist/
 .env
 *.gif
 .DS_Store
+COVERLOOP.md

@@ -1,10 +1,3 @@
-// PHASE 2
-//   createGif will switch to FormData (JSON payload + overlay PNG file);
-//   drop the explicit Content-Type header when that happens — the browser
-//   sets the multipart boundary itself.
-// ============================================================================
-
-// TODO: implement searchAlbums + createGif as described above.
 import type { Album } from '../types';
 import type { CreateGifRequest } from '../types';
 

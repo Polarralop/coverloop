@@ -1,17 +1,3 @@
-// ============================================================================
-// server/src/types.ts — shared server-side shapes
-// ----------------------------------------------------------------------------
-// PURPOSE
-//   The server's copy of the API shapes (mirrors client/src/types.ts — see
-//   the note there about deliberate duplication), plus server-only types.
-//
-// USED BY
-//   - routes/albums.ts       (Album — response shape)
-//   - routes/gif.ts          (CreateGifRequest — validate req.body against it)
-//   - services/itunes.ts     (Album + ItunesResult for the raw API response)
-//   - services/imageFetcher.ts / gifBuilder.ts  (Frame)
-// ============================================================================
-
 /** Normalized album sent to the client. */
 export interface Album {
   id: number | string;
