@@ -32,11 +32,18 @@ export async function searchAlbumsDiscogs(term: string, limit = 20): Promise<Alb
   return sendSearchParams(term, limit, 'search-discogs');
 }
 
-export async function createGif(payload: CreateGifRequest): Promise<string> {
+export async function createGif(payload: CreateGifRequest, overlayFile?: File | null): Promise<string> {
+
+  const formData = new FormData();
+  formData.append('payload', JSON.stringify(payload));
+
+  if (overlayFile) {
+    formData.append('overlay', overlayFile);
+  }
+
   const pong = await fetch('/api/gif', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    body: formData,
   });
 
   if (!pong.ok) {

@@ -63,9 +63,9 @@ import AlbumGrid from './components/AlbumGrid';
 import SelectionTray from './components/SelectionTray';
 import SpeedControl from './components/SpeedControl';
 import GifPreview from './components/GifPreview';
+import OverlayUpload from './components/OverlayUpload';
 
 export default function App() {
-  // TODO: state, handlers, and render tree as described above.
   const [searchResults, setSearchResults] = useState<Album[]>([]);
   const [selectedAlbums, setSelectedAlbums] = useState<Album[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -74,6 +74,7 @@ export default function App() {
   const [gifUrl, setGifUrl] = useState<string | null>(null);
   const [isBuilding, setIsBuilding] = useState(false);
   const [lastSearchTerm, setLastSearchTerm] = useState('');
+  const [overlayFile, setOverlayFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   
 
@@ -123,7 +124,7 @@ export default function App() {
         favouriteIndex: selectedAlbums.findIndex((a) => a.id === favouriteId),
         frameDelayMs: frameDelayMs,
       }
-      const newGifUrl = await createGif(payload)
+      const newGifUrl = await createGif(payload, overlayFile);
 
       if (gifUrl) {
         URL.revokeObjectURL(gifUrl);
@@ -180,6 +181,8 @@ export default function App() {
         onSetFavourite={setFavourite}
         onRemove={toggleAlbum}
       />
+      <p>you can upload a transparent PNG to overlay on top of the GIF. 5MB limit; 500x500px recommended.</p>
+      <OverlayUpload overlayFile={overlayFile} onFile={setOverlayFile} />
       <button disabled={selectedAlbums.length < 2 || isBuilding} onClick={handleBuildGif}>
         Make GIF
       </button>

@@ -1,29 +1,44 @@
-// ============================================================================
-// OverlayUpload.tsx — PHASE 2 (do not build yet)
-// ----------------------------------------------------------------------------
-// FUTURE PURPOSE
-//   Let the user pick a transparent PNG that gets composited ON TOP of every
-//   GIF frame. Scaffolded now so the file structure doesn't shift later.
-//
-// PLANNED PROPS (uncomment/extend when you build it)
-//   interface Props {
-//     overlayFile: File | null;
-//     onFile: (file: File | null) => void;  // App holds it, passes to createGif
-//   }
-//
-// PLANNED CONTENTS
-//   - <input type="file" accept="image/png"> (or a dropzone).
-//   - Client-side sanity checks: PNG mime type; warn if it has no alpha
-//     (a fully opaque overlay hides the albums entirely).
-//   - Small preview of the PNG over a checkerboard background, plus a
-//     "remove overlay" button → onFile(null).
-//
-// THE FULL PHASE-2 CHAIN (each file has a matching PHASE 2 note)
-//   here → App.tsx state → api/client.ts (switch to FormData)
-//        → server routes/gif.ts (multer) → services/gifBuilder.ts
-//          (sharp.composite per frame — implementation sketch lives there)
-// ============================================================================
+import { useRef } from 'react';
 
-export default function OverlayUpload() {
-  return null; // Phase 2
+interface Props {
+  overlayFile: File | null;
+  onFile: (file: File | null) => void;
+}
+
+export default function OverlayUpload({overlayFile, onFile}: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const MAX_MB = 5;
+  const MAX_SIZE_BYTES = MAX_MB * 1024 * 1024; // 5MB
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
+
+    if (file && file.type !== 'image/png') {
+      alert('Please choose a PNG file.');
+      return;
+    }
+
+    if (file && file.size > MAX_SIZE_BYTES) {
+      alert(`Please choose a file smaller than ${MAX_MB}MB.`);
+      return;
+    }
+
+    onFile(file);
+  }
+
+  const handleRemove = () => {
+    onFile(null);
+    if (inputRef.current) {
+      inputRef.current.value = '';
+    }
+  }
+
+  return (
+    <div className="overlay-upload">
+      <input ref={inputRef} type="file" accept="image/png" onChange={handleChange} />
+      {overlayFile && (
+        <button onClick={handleRemove}>remove png overlay</button>
+      )}
+    </div>
+  );
 }
