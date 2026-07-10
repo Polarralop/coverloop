@@ -4,6 +4,8 @@ import { searchAlbums } from '../services/musicbrainz';
 import { searchAlbumsDiscogs } from '../services/discogs';
 
 const router = Router();
+const albumLimitPerSearch = 40;
+
 
 function parseSearchParams(req: Request): { term: string; limit: number } | { error: string } {
   const rawTerm = req.query.term;
@@ -13,7 +15,7 @@ function parseSearchParams(req: Request): { term: string; limit: number } | { er
   const term = rawTerm.trim();
 
   const rawLimit = req.query.limit;
-  const limit = rawLimit === undefined ? 20 : Number(rawLimit);
+  const limit = rawLimit === undefined ? albumLimitPerSearch : Number(rawLimit);
   if (Number.isNaN(limit)) {
     return { error: 'limit must be a number' };
   }

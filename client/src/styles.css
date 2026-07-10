@@ -23,8 +23,17 @@
 
 /* TODO: styles. A minimal reset + the classes above will carry phase 1. */
 
+.title {
+  text-align: center;
+}
+
+.subtitle {
+  text-align: center;
+}
+
 .app {
   padding-bottom: 140px; /* roughly the tray's height, adjust to match */
+  text-align: center;
 }
 
 .album-card p {

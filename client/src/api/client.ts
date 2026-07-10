@@ -2,8 +2,9 @@ import type { Album } from '../types';
 import type { CreateGifRequest } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '';
+const albumLimitPerSearch = 40;
 
-async function sendSearchParams(term: string, limit = 20, endPoint: string): Promise<Album[]> {
+async function sendSearchParams(term: string, limit = albumLimitPerSearch, endPoint: string): Promise<Album[]> {
   const params = new URLSearchParams({ term, limit: String(limit) });
   const pong = await fetch(`${API_BASE}/api/albums/${endPoint}?${params}`);
   if (!pong.ok) {
@@ -19,11 +20,11 @@ async function sendSearchParams(term: string, limit = 20, endPoint: string): Pro
 
 }
 
-export async function searchAlbums(term: string, limit = 20): Promise<Album[]> {
+export async function searchAlbums(term: string, limit = albumLimitPerSearch): Promise<Album[]> {
   return sendSearchParams(term, limit, 'search');
 }
 
-export async function searchAlbumsDiscogs(term: string, limit = 20): Promise<Album[]> {
+export async function searchAlbumsDiscogs(term: string, limit = albumLimitPerSearch): Promise<Album[]> {
   return sendSearchParams(term, limit, 'search-discogs');
 }
 

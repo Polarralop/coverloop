@@ -1,5 +1,6 @@
 import type { Album, MusicBrainzResult } from '../types';
 import { fetchWithRetries } from './fetchWithRetries';
+const albumLimitPerSearch = 40;
 
 function rankByExactness(albums: Album[], term: string): Album[] {
   const normalizedTerm = term.trim().toLowerCase();
@@ -14,7 +15,7 @@ function rankByExactness(albums: Album[], term: string): Album[] {
   });
 }
 
-export async function searchAlbums(term: string, limit = 20): Promise<Album[]> {
+export async function searchAlbums(term: string, limit = albumLimitPerSearch): Promise<Album[]> {
   const url = new URL('https://musicbrainz.org/ws/2/release-group/');
   url.searchParams.set('query', `(artist:"${term}" OR releasegroup:"${term}") AND status:official AND (primarytype:Album OR primarytype:EP) AND -secondarytype:*`);
   url.searchParams.set('fmt', 'json');

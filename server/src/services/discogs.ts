@@ -1,7 +1,8 @@
 import type { Album, DiscogsResult } from '../types';
 import { fetchWithRetries } from './fetchWithRetries';
+const albumLimitPerSearch = 40;
 
-export async function searchAlbumsDiscogs(term: string, limit = 20): Promise<Album[]> {
+export async function searchAlbumsDiscogs(term: string, limit = albumLimitPerSearch): Promise<Album[]> {
     const token = process.env.DISCOGS_TOKEN;
     if (!token) 
         throw new Error('DISCOGS_TOKEN not set');
