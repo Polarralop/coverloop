@@ -1,4 +1,5 @@
 import type { Album, DiscogsResult } from '../types';
+import { fetchWithRetries } from './fetchWithRetries';
 
 export async function searchAlbumsDiscogs(term: string, limit = 20): Promise<Album[]> {
     const token = process.env.DISCOGS_TOKEN;
@@ -11,7 +12,7 @@ export async function searchAlbumsDiscogs(term: string, limit = 20): Promise<Alb
     url.searchParams.set('format', 'Album');
     url.searchParams.set('per_page', String(limit));
 
-    const pong = await fetch(url, {
+    const pong = await fetchWithRetries(url, {
         headers: {
             'Authorization': `Discogs token=${token}`,
             'User-Agent': 'coverloop/0.1 (polarrralop@outlook.com)',

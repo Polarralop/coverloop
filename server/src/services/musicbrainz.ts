@@ -1,4 +1,5 @@
 import type { Album, MusicBrainzResult } from '../types';
+import { fetchWithRetries } from './fetchWithRetries';
 
 export async function searchAlbums(term: string, limit = 20): Promise<Album[]> {
   const url = new URL('https://musicbrainz.org/ws/2/release-group/');
@@ -6,7 +7,7 @@ export async function searchAlbums(term: string, limit = 20): Promise<Album[]> {
   url.searchParams.set('fmt', 'json');
   url.searchParams.set('limit', String(limit));
 
-  const pong = await fetch(url, {
+  const pong = await fetchWithRetries(url, {
     headers: {
       'User-Agent': 'Coverloop/0.1 (polarrralop@outlook.com)',
     },
