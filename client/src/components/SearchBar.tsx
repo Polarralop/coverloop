@@ -39,7 +39,7 @@ export default function SearchBar({ onSearch }: Props) {
         type="text"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="search for an album..."
+        placeholder="search for an artist/album..."
       />
       <button type="submit">search</button>
     </form>
