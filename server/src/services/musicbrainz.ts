@@ -1,6 +1,19 @@
 import type { Album, MusicBrainzResult } from '../types';
 import { fetchWithRetries } from './fetchWithRetries';
 
+function rankByExactness(albums: Album[], term: string): Album[] {
+  const normalizedTerm = term.trim().toLowerCase();
+
+  return [...albums].sort((a, b) => {
+    const aExact = a.title.trim().toLowerCase() === normalizedTerm;
+    const bExact = b.title.trim().toLowerCase() === normalizedTerm;
+
+    if (aExact && !bExact) return -1;
+    if (bExact && !aExact) return 1;
+    return 0; // preserve MusicBrainz's original relative order otherwise
+  });
+}
+
 export async function searchAlbums(term: string, limit = 20): Promise<Album[]> {
   const url = new URL('https://musicbrainz.org/ws/2/release-group/');
   url.searchParams.set('query', `(artist:"${term}" OR releasegroup:"${term}") AND status:official AND (primarytype:Album OR primarytype:EP) AND -secondarytype:*`);
@@ -32,6 +45,6 @@ export async function searchAlbums(term: string, limit = 20): Promise<Album[]> {
     artworkUrlHiRes: `https://coverartarchive.org/release-group/${r.id}/front-500`,
   }));
 
-  return albums;
+  return rankByExactness(albums, term);
 
 }
