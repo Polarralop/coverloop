@@ -118,7 +118,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <title>coverloop</title>
+      <h1>coverloop</h1>
       <p>turn covers into a looping gif</p>
       <SearchBar onSearch={handleSearch} />
       <p>it's highly suggested to search by artist. album search algo. is wonky right now; less likely to produce what you're looking for.</p>
