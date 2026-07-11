@@ -23,6 +23,13 @@
 
 /* TODO: styles. A minimal reset + the classes above will carry phase 1. */
 
+.api-credit {
+  color: #888;
+  font-size: 0.9rem;
+  font-style: italic;
+  text-align: left;
+}
+
 .title {
   text-align: center;
 }
