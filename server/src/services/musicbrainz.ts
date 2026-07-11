@@ -23,7 +23,7 @@ export async function searchAlbumsMusicBrainz(term: string, limit = albumLimitPe
 
   const pong = await fetchWithRetries(url, {
     headers: {
-      'User-Agent': 'Coverloop/0.1 (polarrralop@outlook.com)',
+      'User-Agent': 'Coverloop/0.1 (https://coverloop.vercel.app)',
     },
   });
 

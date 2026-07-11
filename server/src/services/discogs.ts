@@ -16,7 +16,7 @@ export async function searchAlbumsDiscogs(term: string, limit = albumLimitPerSea
     const pong = await fetchWithRetries(url, {
         headers: {
             'Authorization': `Discogs token=${token}`,
-            'User-Agent': 'coverloop/0.1 (polarrralop@outlook.com)',
+            'User-Agent': 'coverloop/0.1 (https://coverloop.vercel.app)',
         },
     });
     if (!pong.ok)

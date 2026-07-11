@@ -7,6 +7,7 @@ import SelectionTray from './components/SelectionTray';
 import SpeedControl from './components/SpeedControl';
 import GifPreview from './components/GifPreview';
 import OverlayUpload from './components/OverlayUpload';
+import SocialHeader from './components/SocialHeader';
 
 export default function App() {
   const [searchResults, setSearchResults] = useState<Album[]>([]);
@@ -147,7 +148,10 @@ export default function App() {
 
   return (
     <div className="app">
-      <p className="api-credit">search APIs provided by: Deezer, MusicBrainz, Discogs. kudos to them!</p>
+      <div className="top-bar">
+        <p className="api-credit">search APIs provided by: Deezer, MusicBrainz, Discogs. kudos to them!</p>
+        <SocialHeader />
+      </div>
       <h1 className="title">coverloop</h1>
       <p className="subtitle">turn covers into a looping gif</p>
       <SearchBar onSearch={handleSearch} />
