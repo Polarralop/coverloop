@@ -4,3 +4,4 @@ dist/
 *.gif
 .DS_Store
 COVERLOOP.md
+_test*.ts

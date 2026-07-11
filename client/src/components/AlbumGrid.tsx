@@ -6,10 +6,11 @@ interface Props {
   selected: Album[];                 // App.selectedAlbums (to highlight cards)
   loading: boolean;                  // App.isSearching
   onToggle: (album: Album) => void;  // App.toggleAlbum
+  onSearchMusicBrainz: () => void;
   onSearchDiscogs: () => void;
 }
 
-export default function AlbumGrid({ results, selected, loading, onToggle, onSearchDiscogs }: Props) {
+export default function AlbumGrid({ results, selected, loading, onToggle, onSearchDiscogs, onSearchMusicBrainz }: Props) {
   if (loading) {
     return (
       <div className="album-grid">
@@ -40,7 +41,8 @@ export default function AlbumGrid({ results, selected, loading, onToggle, onSear
           ))}
         </div>
       )}
-      <button onClick={onSearchDiscogs}>not finding it or wrong cover? search <i>Discogs</i> too</button>
+      <button onClick={onSearchMusicBrainz}>not finding it? search via <i>MusicBrainz</i></button>
+      <button onClick={onSearchDiscogs}>still not finding it? search via <i>Discogs</i></button>
     </div>
   );
 }

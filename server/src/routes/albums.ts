@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import type { Request } from 'express';
-import { searchAlbums } from '../services/musicbrainz';
+import { searchAlbumsMusicBrainz } from '../services/musicbrainz';
+import { searchAlbumsDeezer } from '../services/deezer';
 import { searchAlbumsDiscogs } from '../services/discogs';
 
 const router = Router();
@@ -26,16 +27,28 @@ function parseSearchParams(req: Request): { term: string; limit: number } | { er
   return { term, limit };
 }
 
-router.get('/search', async (req, res, next) => {
+router.get('/search-deezer', async (req, res, next) => {
   try {
     const parsed = parseSearchParams(req);
     if ('error' in parsed) {
       return res.status(400).json({ error: parsed.error });
     }
-    const albums = await searchAlbums(parsed.term, parsed.limit);
+    const albums = await searchAlbumsDeezer(parsed.term, parsed.limit);
     res.json({ albums });
   } catch (err) { next(err); }
 });
+
+router.get('/search-musicbrainz', async (req, res, next) => {
+  try {
+    const parsed = parseSearchParams(req);
+    if ('error' in parsed) {
+      return res.status(400).json({ error: parsed.error });
+    }
+    const albums = await searchAlbumsDiscogs(parsed.term, parsed.limit);
+    res.json({ albums });
+  } catch (err) { next(err); }
+});
+
 
 router.get('/search-discogs', async (req, res, next) => {
   try {

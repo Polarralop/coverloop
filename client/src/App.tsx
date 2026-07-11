@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import type { Album, CreateGifRequest } from './types';
-import { searchAlbums, createGif, searchAlbumsDiscogs } from './api/client';
+import { searchAlbumsDeezer, createGif, searchAlbumsDiscogs, searchAlbumsMusicBrainz } from './api/client';
 import SearchBar from './components/SearchBar';
 import AlbumGrid from './components/AlbumGrid';
 import SelectionTray from './components/SelectionTray';
@@ -27,15 +27,27 @@ export default function App() {
   
 
 
-  const handleSearch = async (term: string) => {
+  const handleSearch = async (term: string) => { // MAIN SEARCH; SWAP AS NEEDED
     setIsSearching(true);
     setLastSearchTerm(term);
     setError(null);
     try {
-      const albums = await searchAlbums(term);
+      const albums = await searchAlbumsDeezer(term);
       setSearchResults(albums);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Search failed');
+      setError(err instanceof Error ? err.message : 'Deezer search failed');
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+    const handleSearchMusicBrainz = async () => {
+    setIsSearching(true);
+    try {
+      const albums = await searchAlbumsMusicBrainz(lastSearchTerm);
+      setSearchResults((prev) => [...prev, ...albums]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "MusicBrainz search failed");
     } finally {
       setIsSearching(false);
     }
@@ -129,6 +141,7 @@ export default function App() {
         loading={isSearching}
         onToggle={toggleAlbum}
         onSearchDiscogs={handleSearchDiscogs}
+        onSearchMusicBrainz={handleSearchMusicBrainz}
       />
       <SelectionTray 
         albums={selectedAlbums}

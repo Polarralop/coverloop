@@ -20,12 +20,16 @@ async function sendSearchParams(term: string, limit = albumLimitPerSearch, endPo
 
 }
 
-export async function searchAlbums(term: string, limit = albumLimitPerSearch): Promise<Album[]> {
-  return sendSearchParams(term, limit, 'search');
+export async function searchAlbumsDeezer(term: string, limit = albumLimitPerSearch): Promise<Album[]> {
+  return sendSearchParams(term, limit, 'search-deezer');
 }
 
 export async function searchAlbumsDiscogs(term: string, limit = albumLimitPerSearch): Promise<Album[]> {
   return sendSearchParams(term, limit, 'search-discogs');
+}
+
+export async function searchAlbumsMusicBrainz(term: string, limit = albumLimitPerSearch): Promise<Album[]> {
+  return sendSearchParams(term, limit, 'search-musicbrainz');
 }
 
 export async function createGif(payload: CreateGifRequest, overlayFile?: File | null): Promise<string> {

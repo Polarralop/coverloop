@@ -27,6 +27,16 @@ export interface DiscogsResult {
   cover_image?: string;
   thumb?: string;
 }
+
+export interface DeezerAlbumResult {
+  id: number;
+  title?: string;
+  record_type?: string;    // 'album' | 'ep' | 'single'
+  cover_medium?: string;   // 250² — grid thumbnail
+  cover_big?: string;      // 500² — matches FRAME_SIZE
+  cover_xl?: string;       // 1000²
+  artist?: { name: string };
+}
 /** One normalized RGBA frame produced by imageFetcher, consumed by gifBuilder. */
 export interface Frame {
   data: Buffer;    // raw RGBA pixels (4 channels), FRAME_SIZE x FRAME_SIZE
