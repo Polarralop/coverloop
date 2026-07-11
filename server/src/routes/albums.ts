@@ -44,7 +44,7 @@ router.get('/search-musicbrainz', async (req, res, next) => {
     if ('error' in parsed) {
       return res.status(400).json({ error: parsed.error });
     }
-    const albums = await searchAlbumsDiscogs(parsed.term, parsed.limit);
+    const albums = await searchAlbumsMusicBrainz(parsed.term, parsed.limit);
     res.json({ albums });
   } catch (err) { next(err); }
 });

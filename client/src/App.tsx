@@ -27,13 +27,16 @@ export default function App() {
   
 
 
-  const handleSearch = async (term: string) => { // MAIN SEARCH; SWAP AS NEEDED
+  const handleSearch = async (term: string) => {
     setIsSearching(true);
     setLastSearchTerm(term);
     setError(null);
     try {
       const albums = await searchAlbumsDeezer(term);
-      setSearchResults(albums);
+      if (albums.length !== 0)
+        setSearchResults(albums);
+      else
+        await runMusicBrainz(term, 'replace'); // auto-fallback: pass term so we don't read stale lastSearchTerm
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Deezer search failed');
     } finally {
@@ -41,29 +44,43 @@ export default function App() {
     }
   };
 
-    const handleSearchMusicBrainz = async () => {
+  // MusicBrainz/Discogs are reached two ways: automatically when a fresh search
+  // falls through (mode 'replace'), or via their manual buttons (mode 'append',
+  // adding to what's already shown). term is always passed in explicitly so the
+  // auto path never reads a stale lastSearchTerm from an older closure.
+  const runMusicBrainz = async (term: string, mode: 'replace' | 'append') => {
+    setError(null);
     setIsSearching(true);
     try {
-      const albums = await searchAlbumsMusicBrainz(lastSearchTerm);
-      setSearchResults((prev) => [...prev, ...albums]);
+      const albums = await searchAlbumsMusicBrainz(term);
+      if (albums.length !== 0)
+        setSearchResults((prev) => (mode === 'append' ? [...prev, ...albums] : albums));
+      else
+        await runDiscogs(term, mode);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "MusicBrainz search failed");
+      setError(err instanceof Error ? err.message : 'MusicBrainz search failed');
     } finally {
       setIsSearching(false);
     }
   };
 
-  const handleSearchDiscogs = async () => {
+  const runDiscogs = async (term: string, mode: 'replace' | 'append') => {
+    setError(null);
     setIsSearching(true);
     try {
-      const albums = await searchAlbumsDiscogs(lastSearchTerm);
-      setSearchResults((prev) => [...prev, ...albums]);
+      const albums = await searchAlbumsDiscogs(term);
+      setSearchResults((prev) => (mode === 'append' ? [...prev, ...albums] : albums));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Discogs search failed");
+      setError(err instanceof Error ? err.message : 'Discogs search failed');
     } finally {
       setIsSearching(false);
     }
   };
+
+  // Button handlers: append to current results using the committed lastSearchTerm.
+  // Arrow form so the click event isn't passed in as `term`.
+  const handleSearchMusicBrainz = () => runMusicBrainz(lastSearchTerm, 'append');
+  const handleSearchDiscogs = () => runDiscogs(lastSearchTerm, 'append');
 
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
