@@ -3,6 +3,7 @@ Pick your favourite albums and stitch the cover art together into an animated GI
 Layer over a PNG to make it truly yours.
 
 ![Coverloop Demo](docs/sample.gif)
+> credit to @Crain1Art for my favourite umbreon picture ever
 
 Try it out for yourself: https://coverloop.vercel.app
 
