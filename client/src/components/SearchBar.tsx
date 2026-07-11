@@ -34,7 +34,7 @@ export default function SearchBar({ onSearch }: Props) {
 
 
   return(
-    <form onSubmit={handleSubmit}>
+    <form className="search-bar" onSubmit={handleSubmit}>
       <input 
         type="text"
         value={text}

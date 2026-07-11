@@ -21,10 +21,19 @@
    that lets the covers carry the color tends to beat a busy chrome.
    ========================================================================== */
 
-/* TODO: styles. A minimal reset + the classes above will carry phase 1. */
+/* Dark, gallery-like base — the album art carries the colour. */
+html,
+body {
+  background: #141416;
+}
+
+body {
+  margin: 0;
+  color: #e8e8e8;
+}
 
 .api-credit {
-  color: #888;
+  color: #7d7d7d;
   font-size: 0.9rem;
   font-style: italic;
   text-align: left;
@@ -36,10 +45,13 @@
 
 .subtitle {
   text-align: center;
+  color: #a8a8a8;
 }
 
 .app {
-  padding-bottom: 140px; /* roughly the tray's height, adjust to match */
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 24px 160px; /* bottom clears the fixed tray + breathing room */
   text-align: center;
 }
 
@@ -50,8 +62,14 @@
 }
 
 .album-card {
+  background: none;
+  color: inherit;
+  font: inherit;
   border: 2px solid transparent;
+  border-radius: 6px;
+  padding: 4px;
   cursor: pointer;
+  transition: border-color 0.15s ease;
 }
 
 .album-card img {
@@ -59,6 +77,10 @@
   aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 4px;
+}
+
+.album-card:hover {
+  border-color: #34363a;
 }
 
 .album-card.selected {
@@ -69,19 +91,35 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 16px;
+  margin: 24px 0; /* separate the results from the search bar above and controls below */
+}
+
+.fallback-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 8px;
 }
 
 .hint {
-  color: #888;
+  color: #9a9a9a;
   font-size: 0.9rem;
   font-style: italic;
   text-align: center;
   padding: 2rem 0;
 }
+
+.error {
+  color: #ff6b6b;
+  font-weight: 600;
+  padding: 0.5rem 0;
+}
+
 .skeleton-card {
   width: 140px;
   height: 140px;
-  background: #e0e0e0;
+  background: #26272a;
   border-radius: 4px;
   animation: pulse 1.5s ease-in-out infinite;
 }
@@ -90,7 +128,8 @@
   display: flex;
   gap: 12px;
   overflow-x: auto;
-  padding: 12px 4px;
+  padding: 12px 16px;
+  min-height: 124px; /* keep the bar the same height whether empty or filled */
 
   position: fixed;
   bottom: 0;
@@ -99,6 +138,12 @@
   z-index: 100;
   background: #1a1a1a;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.tray-empty {
+  margin: auto; /* auto margins center a lone flex child on both axes */
+  color: #9a9a9a;
+  font-style: italic;
 }
 
 .tray-item {
@@ -149,6 +194,132 @@
 
 .gif-preview a:hover {
   text-decoration: underline;
+}
+
+/* --- Form controls -------------------------------------------------------- */
+
+.search-bar {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 8px 0 4px;
+}
+
+.search-bar input {
+  font: inherit;
+  color: #e8e8e8;
+  background: #1d1e21;
+  border: 1px solid #34363a;
+  border-radius: 6px;
+  padding: 9px 12px;
+  width: 100%;
+  max-width: 360px;
+}
+
+.search-bar input::placeholder {
+  color: #6f7176;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: #4a9eff;
+}
+
+/* Neutral / secondary buttons (and the custom file-picker label) */
+.search-bar button,
+.fallback-actions button,
+.overlay-upload button,
+.file-button {
+  display: inline-block;
+  font: inherit;
+  color: #e8e8e8;
+  background: #26272a;
+  border: 1px solid #34363a;
+  border-radius: 6px;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.search-bar button:hover,
+.fallback-actions button:hover,
+.overlay-upload button:hover,
+.file-button:hover {
+  background: #303236;
+  border-color: #45484d;
+}
+
+/* Primary call-to-action */
+.make-gif {
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: #4a9eff;
+  border: 1px solid #4a9eff;
+  border-radius: 6px;
+  padding: 11px 22px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.make-gif:hover:not(:disabled) {
+  background: #63acff;
+  border-color: #63acff;
+}
+
+.make-gif:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Transparent-PNG file picker */
+.overlay-upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 12px 0 20px; /* keep the make GIF button from crowding the picker */
+}
+
+.file-name {
+  color: #9a9a9a;
+  font-size: 0.9rem;
+}
+
+/* Tray icon buttons (favourite star / remove) — ghost, no chrome */
+.tray-item button {
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  background: none;
+  border: none;
+  color: #c9c9c9;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+.tray-item button:hover {
+  color: #fff;
+}
+
+/* Speed slider — centered column over the gif, with room around the readout */
+.speed-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 500px;
+  margin: 20px auto 8px;
+}
+
+.speed-control input[type="range"] {
+  accent-color: #4a9eff;
+  width: 100%; /* fills the 500px column, so it lines up with the gif below */
+}
+
+.speed-control span {
+  color: #a8a8a8;
+  font-size: 0.9rem;
 }
 
 @keyframes pulse {

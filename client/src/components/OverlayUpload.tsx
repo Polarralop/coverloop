@@ -35,7 +35,11 @@ export default function OverlayUpload({overlayFile, onFile}: Props) {
 
   return (
     <div className="overlay-upload">
-      <input ref={inputRef} type="file" accept="image/png" onChange={handleChange} />
+      <label className="file-button">
+        browse...
+        <input ref={inputRef} type="file" accept="image/png" onChange={handleChange} hidden />
+      </label>
+      {overlayFile && <span className="file-name">{overlayFile.name}</span>}
       {overlayFile && (
         <button onClick={handleRemove}>remove png overlay</button>
       )}

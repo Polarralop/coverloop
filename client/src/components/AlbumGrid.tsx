@@ -41,8 +41,10 @@ export default function AlbumGrid({ results, selected, loading, onToggle, onSear
           ))}
         </div>
       )}
-      <button onClick={onSearchMusicBrainz}>not finding it? search via <i>MusicBrainz</i></button>
-      <button onClick={onSearchDiscogs}>still not finding it? search via <i>Discogs</i></button>
+      <div className="fallback-actions">
+        <button onClick={onSearchMusicBrainz}>not finding it? search via <i>MusicBrainz</i></button>
+        <button onClick={onSearchDiscogs}>still not finding it? search via <i>Discogs</i></button>
+      </div>
     </div>
   );
 }

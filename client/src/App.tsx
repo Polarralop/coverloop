@@ -168,8 +168,8 @@ export default function App() {
       />
       <p>you can upload a transparent PNG to overlay on top of the GIF. 5MB limit; 500x500px recommended.</p>
       <OverlayUpload overlayFile={overlayFile} onFile={setOverlayFile} />
-      <button disabled={selectedAlbums.length < 2 || isBuilding} onClick={() => handleBuildGif()}>
-        Make GIF
+      <button className="make-gif" disabled={selectedAlbums.length < 2 || isBuilding} onClick={() => handleBuildGif()}>
+        make GIF
       </button>
       {gifUrl && <SpeedControl valueMs={frameDelayMs} onChange={handleSpeed} />}
       <GifPreview gifUrl={gifUrl} building={isBuilding} />

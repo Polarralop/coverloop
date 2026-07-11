@@ -8,27 +8,27 @@ interface Props {
 }
 
 export default function SelectionTray({ albums, favouriteId, onSetFavourite, onRemove }: Props) {
-  if (albums.length === 0) {
-    return <p className="hint">go on, choose something...</p>
-  }
-
   return(
     <div className="selection-tray">
-      {albums.map((album) => (
-        <div key={album.id} className="tray-item">
-          <img src={album.artworkUrl} alt={album.title} />
+      {albums.length === 0 ? (
+        <p className="tray-empty">go on, choose something...</p>
+      ) : (
+        albums.map((album) => (
+          <div key={album.id} className="tray-item">
+            <img src={album.artworkUrl} alt={album.title} />
 
-          {album.id === favouriteId && (
-            <span className="favourite-badge">1st frame</span>
-          )}
+            {album.id === favouriteId && (
+              <span className="favourite-badge">1st frame</span>
+            )}
 
-          <button onClick={() => onSetFavourite(album.id)}>
-            {album.id === favouriteId ? '★' : '☆'}
-          </button>
+            <button onClick={() => onSetFavourite(album.id)}>
+              {album.id === favouriteId ? '★' : '☆'}
+            </button>
 
-          <button onClick={() => onRemove(album)}>✕</button>
-        </div>
-      ))}
+            <button onClick={() => onRemove(album)}>✕</button>
+          </div>
+        ))
+      )}
     </div>
   );
 }
