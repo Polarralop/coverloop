@@ -120,7 +120,13 @@ export default function App() {
     }, 400);
   };
 
+  // Builds can overlap: a speed change mid-build starts a second request, and
+  // responses don't come back in order — so last-response-wins showed stale
+  // speeds. Each build takes a ticket; only the latest may apply its result.
+  const buildIdRef = useRef(0);
+
   const handleBuildGif = async (overrideDelay?: number) => {
+    const buildId = ++buildIdRef.current;
     setIsBuilding(true);
     setError(null);
 
@@ -132,16 +138,31 @@ export default function App() {
       }
       const newGifUrl = await createGif(payload, overlayFile);
 
-      if (gifUrl) {
-        URL.revokeObjectURL(gifUrl);
+      if (buildId !== buildIdRef.current) {
+        // A newer build started while this one was in flight — discard, and
+        // free the blob so the orphaned GIF doesn't leak.
+        URL.revokeObjectURL(newGifUrl);
+        return;
       }
 
-      setGifUrl(newGifUrl);
+      // Functional update so we revoke the URL actually on screen, not a stale
+      // closure copy captured when this build started.
+      setGifUrl((prev) => {
+        if (prev) {
+          URL.revokeObjectURL(prev);
+        }
+        return newGifUrl;
+      });
 
     } catch (err) {
-      setError(err instanceof Error ? err.message: 'GIF generation failed');
+      if (buildId === buildIdRef.current) {
+        setError(err instanceof Error ? err.message: 'GIF generation failed');
+      }
     } finally {
-      setIsBuilding(false);
+      // A stale build finishing must not clear the spinner for the newer one.
+      if (buildId === buildIdRef.current) {
+        setIsBuilding(false);
+      }
     }
 
   };
