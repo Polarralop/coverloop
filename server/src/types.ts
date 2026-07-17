@@ -2,7 +2,7 @@
 export interface Album {
   id: number | string;
   title: string;
-  artist: string;
+  artist?: string;
   artworkUrl: string;
   artworkUrlHiRes: string;
 }
@@ -37,6 +37,15 @@ export interface DeezerAlbumResult {
   cover_xl?: string;       // 1000²
   artist?: { name: string };
 }
+
+export interface IgdbGameResult {
+  id: number;
+  name: string;
+  cover?: { image_id: string };
+  first_release_date?: number;  // Unix timestamp in SECONDS (not ms); absent for unreleased games
+  rating_count?: number;        // popularity signal; absent for obscure titles (IGDB's `follows` is always null)
+}
+
 /** One normalized RGBA frame produced by imageFetcher, consumed by gifBuilder. */
 export interface Frame {
   data: Buffer;    // raw RGBA pixels (4 channels), FRAME_SIZE x FRAME_SIZE
