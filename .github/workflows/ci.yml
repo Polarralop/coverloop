@@ -32,6 +32,12 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      # Server unit + route tests (Vitest + supertest). Services are mocked —
+      # no live APIs, no secrets needed.
+      - name: Test server
+        working-directory: server
+        run: npm test
+
       # Mirrors what Vercel runs on deploy — catches bundling breakage typecheck misses.
       - name: Build client
         working-directory: client

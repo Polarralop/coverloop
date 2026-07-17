@@ -20,6 +20,10 @@ async function sendSearchParams(term: string, limit = albumLimitPerSearch, endPo
 
 }
 
+export async function searchGamesIgdb(term: string, limit = albumLimitPerSearch): Promise<Album[]> {
+  return sendSearchParams(term, limit, 'search-igdb');
+}
+
 export async function searchAlbumsDeezer(term: string, limit = albumLimitPerSearch): Promise<Album[]> {
   return sendSearchParams(term, limit, 'search-deezer');
 }

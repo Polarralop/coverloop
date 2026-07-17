@@ -10,7 +10,7 @@ export async function searchAlbumsDeezer(term: string, limit = albumLimitPerSear
 
   const pong = await fetchWithRetries(url, {
     headers: {
-      'User-Agent': 'Coverloop/0.1 (https://coverloop.vercel.app)',
+      'User-Agent': 'Coverloop/1.1 (https://coverloop.vercel.app)',
     },
   });
 
