@@ -1,7 +1,7 @@
 {
   "name": "coverloop",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.1.0",
   "//": [
     "Root package exists ONLY to run server + client with one command.",
     "All real dependencies live in server/package.json and client/package.json."

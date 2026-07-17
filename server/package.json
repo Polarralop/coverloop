@@ -1,7 +1,7 @@
 {
   "name": "coverloop-server",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.1.0",
   "type": "module",
   "//": [
     "express  - HTTP server + routing (@types/express for the typings)",

@@ -1,7 +1,7 @@
 {
   "name": "coverloop-client",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.1.0",
   "type": "module",
   "//": [
     "Vite compiles TS/TSX natively but does NOT typecheck - that's what the",
