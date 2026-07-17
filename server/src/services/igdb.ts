@@ -91,13 +91,16 @@ async function runQuery(body: string): Promise<IgdbGameResult[]> {
     return (data ?? []).filter((r) => r.id && r.name && r.cover?.image_id);
 }
 
-function toAlbum(r: IgdbGameResult): Album {
+// Exported for unit tests — not called outside this module in production.
+export function toAlbum(r: IgdbGameResult): Album {
     return {
         id: r.id,
         title: r.name,
-        // first_release_date is Unix *seconds*; unreleased games omit it.
+        // first_release_date is Unix *seconds*, midnight UTC; unreleased games
+        // omit it. getUTCFullYear, not getFullYear — a Jan-1-UTC date would
+        // otherwise show the previous year on any server west of UTC.
         artist: r.first_release_date
-            ? String(new Date(r.first_release_date * 1000).getFullYear())
+            ? String(new Date(r.first_release_date * 1000).getUTCFullYear())
             : '',
         artworkUrl: igdbImageUrl(r.cover!.image_id, 'cover_big'),   // 264x352 thumb for the grid
         artworkUrlHiRes: igdbImageUrl(r.cover!.image_id, '1080p'),  // sharpest source for the GIF frame
@@ -122,7 +125,8 @@ function toAlbum(r: IgdbGameResult): Album {
  * lets the noise sink regardless of which query produced it.
  */
 export async function searchGames(term: string, limit: number = GameLimitPerSearch): Promise<Album[]> {
-    // APICalypse terms are quoted, so strip quotes rather than let them break the query.
+    // IGDB's query syntax wraps the term in quotes, so strip any the user typed
+    // rather than let them terminate the string early and break the query.
     const safeTerm = term.replace(/"/g, '');
 
     const [ranked, relevant] = await Promise.all([

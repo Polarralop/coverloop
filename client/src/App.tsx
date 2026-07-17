@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import type { Album, CreateGifRequest } from './types';
-import { searchAlbumsDeezer, createGif, searchAlbumsDiscogs, searchAlbumsMusicBrainz } from './api/client';
+import { searchAlbumsDeezer, createGif, searchAlbumsDiscogs, searchAlbumsMusicBrainz, searchGamesIgdb } from './api/client';
 import SearchBar from './components/SearchBar';
 import AlbumGrid from './components/AlbumGrid';
 import SelectionTray from './components/SelectionTray';
@@ -8,6 +8,7 @@ import SpeedControl from './components/SpeedControl';
 import GifPreview from './components/GifPreview';
 import OverlayUpload from './components/OverlayUpload';
 import SocialHeader from './components/SocialHeader';
+import SearchModeToggle from './components/SearchModeToggle';
 
 export default function App() {
   const [searchResults, setSearchResults] = useState<Album[]>([]);
@@ -20,7 +21,17 @@ export default function App() {
   const [lastSearchTerm, setLastSearchTerm] = useState('');
   const [overlayFile, setOverlayFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
+  const [searchMode, setSearchMode] = useState<'music' | 'games'>('music');
+
+
+  const setSearch = () => {
+    if (searchMode === 'music')
+      setSearchMode('games');
+    else
+      setSearchMode('music');
+    const emptySearch: Album[] = [];
+    setSearchResults(emptySearch);
+  }
 
   const setFavourite = (albumId: number | string | null) => {
     setFavouriteId(albumId);
@@ -32,17 +43,29 @@ export default function App() {
     setIsSearching(true);
     setLastSearchTerm(term);
     setError(null);
-    try {
-      const albums = await searchAlbumsDeezer(term);
-      if (albums.length !== 0)
-        setSearchResults(albums);
-      else
-        await runMusicBrainz(term, 'replace'); // auto-fallback: pass term so we don't read stale lastSearchTerm
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Deezer search failed');
-    } finally {
-      setIsSearching(false);
+    if (searchMode === 'music') {
+      try {
+        const albums = await searchAlbumsDeezer(term);
+        if (albums.length !== 0)
+          setSearchResults(albums);
+        else
+          await runMusicBrainz(term, 'replace'); // auto-fallback: pass term so we don't read stale lastSearchTerm
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Deezer search failed');
+      } finally {
+        setIsSearching(false);
+      }
     }
+
+    else {
+      try {
+        const games = await searchGamesIgdb(term);
+        setSearchResults(games);
+      } catch (err) {
+        setError(err instanceof Error ? err.message: 'IGDB search failed');
+      } finally { setIsSearching(false); }
+    }
+
   };
 
   // MusicBrainz/Discogs are reached two ways: automatically when a fresh search
@@ -149,17 +172,19 @@ export default function App() {
   return (
     <div className="app">
       <div className="top-bar">
-        <p className="api-credit">search APIs provided by: Deezer, MusicBrainz, Discogs. kudos to them!</p>
+        <p className="api-credit">search APIs provided by: Deezer, MusicBrainz, Discogs, IGDB (new!). kudos to them!</p>
         <SocialHeader />
       </div>
       <h1 className="title">coverloop</h1>
       <p className="subtitle">turn covers into a looping gif</p>
+      <SearchModeToggle mode={searchMode} onToggle={setSearch} />
       <SearchBar onSearch={handleSearch} />
       {error && <div className="error">{error}</div>}
       <AlbumGrid
         results={searchResults}
         selected={selectedAlbums}
         loading={isSearching}
+        mode={searchMode}
         onToggle={toggleAlbum}
         onSearchDiscogs={handleSearchDiscogs}
         onSearchMusicBrainz={handleSearchMusicBrainz}
