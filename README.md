@@ -10,7 +10,9 @@ Try it out for yourself: https://coverloop.vercel.app
 Hosted on Vercel + Render's free tiers.
 
 # APIs
-As a primary search, Deezer is used due to high-quality album covers and consistent information.
+The IGDB API is used to fetch high-quality game covers from a vast database of video games (and DLCs that have covers!).
+
+As a primary album search, Deezer is used due to high-quality covers and consistent information.
 However, it's linked to streaming services; if they're not on Spotify / Apple Music, you might not find them
 (ex: Godspeed You! Black Emperor).
 
