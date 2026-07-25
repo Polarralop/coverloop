@@ -1,6 +1,6 @@
 # Coverloop
 Pick your favourite albums and stitch the cover art together into an animated GIF.
-Layer over a PNG to make it truly yours.
+Personalize it by layering a PNG atop!
 
 ![Coverloop Demo](docs/sample.gif)
 > credit to @Crain1Art for my favourite umbreon picture ever
