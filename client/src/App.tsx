@@ -14,7 +14,6 @@ export default function App() {
   const [searchResults, setSearchResults] = useState<Album[]>([]);
   const [selectedAlbums, setSelectedAlbums] = useState<Album[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [favouriteId, setFavouriteId] = useState<number | string | null>(null);
   const [frameDelayMs, setFrameDelayMs] = useState<number>(500);
   const [gifUrl, setGifUrl] = useState<string | null>(null);
   const [isBuilding, setIsBuilding] = useState(false);
@@ -32,11 +31,6 @@ export default function App() {
     const emptySearch: Album[] = [];
     setSearchResults(emptySearch);
   }
-
-  const setFavourite = (albumId: number | string | null) => {
-    setFavouriteId(albumId);
-  };
-  
 
 
   const handleSearch = async (term: string) => {
@@ -133,7 +127,9 @@ export default function App() {
     try {
       const payload: CreateGifRequest = {
         artworkUrls: selectedAlbums.map((a) => a.artworkUrlHiRes),
-        favouriteIndex: selectedAlbums.findIndex((a) => a.id === favouriteId),
+        // Tray order IS frame order now — the leftmost cover is frame 0, so the
+        // server's rotation ([fav, ...after, ...before]) is an identity op.
+        favouriteIndex: 0,
         frameDelayMs: overrideDelay ?? frameDelayMs,
       }
       const newGifUrl = await createGif(payload, overlayFile);
@@ -169,23 +165,23 @@ export default function App() {
 
 
   const toggleAlbum = (album: Album) => {
-    const isCurrentlySelected = selectedAlbums.some((a) => a.id === album.id);
-
-      if (isCurrentlySelected && favouriteId === album.id) {
-        // removing the current favourite
-        const remaining = selectedAlbums.filter((a) => a.id !== album.id);
-        setFavourite(remaining.length > 0 ? remaining[0].id : null);
-      } else if (!isCurrentlySelected && selectedAlbums.length === 0) {
-        // adding the very first album
-        setFavourite(album.id);
-      }
-
     setSelectedAlbums((prev) =>
       prev.some((a) => a.id === album.id)
         ? prev.filter((a) => a.id !== album.id)
         : [...prev, album]
     );
-    
+  };
+
+  // Cut the dragged album out and paste it back at its new index. Functional
+  // update is required, not stylistic: a drag calls this many times in quick
+  // succession, and reading selectedAlbums from the closure would drop moves.
+  const reorderAlbums = (from: number, to: number) => {
+    setSelectedAlbums((prev) => {
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      return next;
+    });
   };
 
 
@@ -210,11 +206,10 @@ export default function App() {
         onSearchDiscogs={handleSearchDiscogs}
         onSearchMusicBrainz={handleSearchMusicBrainz}
       />
-      <SelectionTray 
+      <SelectionTray
         albums={selectedAlbums}
-        favouriteId={favouriteId}
-        onSetFavourite={setFavourite}
         onRemove={toggleAlbum}
+        onReorder={reorderAlbums}
       />
       <p>you can upload a transparent PNG to overlay on top of the GIF. 5MB limit; 500x500px recommended.</p>
       <OverlayUpload overlayFile={overlayFile} onFile={setOverlayFile} />

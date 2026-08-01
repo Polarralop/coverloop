@@ -11,7 +11,7 @@
      .album-card       — cover image + text; cursor: pointer
      .album-card.selected — the "picked" highlight (border/checkmark)
      .selection-tray   — horizontal flex strip, overflow-x: auto
-     .favourite-badge  — "first frame" marker on the favourite
+     .tray-item.dragging — the cover currently being dragged (dimmed in place)
      .speed-control    — slider + readout row
      .gif-preview      — result box; keep a fixed aspect placeholder so the
                          layout doesn't jump when the GIF appears
@@ -116,8 +116,7 @@ body {
   border-radius: 4px;
 }
 
-/* IGDB box art is exactly 3:4 (264x352, 810x1080) — browse it uncropped here.
-   The tray thumbnails stay square: that's the honest preview of the GIF frame. */
+/* IGDB box art is exactly 3:4 (264x352, 810x1080). tray thumbanails and gifs stay 512x512 */
 .album-grid--games .album-card img {
   aspect-ratio: 3 / 4;
 }
@@ -225,6 +224,21 @@ body {
   flex: 0 0 auto;
   width: 100px;
   text-align: center;
+
+  /* touch-action: none is REQUIRED for the drag, not cosmetic — without it the
+     browser claims touch gestures for scrolling the tray before the pointer
+     handlers ever see a move, and reordering silently does nothing on mobile. */
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+
+/* The dragged cover stays in the layout flow and just dims; the list reshuffles
+   around it. Nothing follows the cursor — a floating ghost under the pointer
+   would swallow every elementFromPoint hit test and break the drag. */
+.tray-item.dragging {
+  opacity: 0.4;
+  cursor: grabbing;
 }
 
 .tray-item img {
@@ -232,17 +246,6 @@ body {
   height: 100px;
   border-radius: 4px;
   object-fit: cover;
-}
-
-.favourite-badge {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  background: #4a9eff;
-  color: white;
-  font-size: 0.7rem;
-  padding: 2px 6px;
-  border-radius: 4px;
 }
 
 .gif-preview {
@@ -360,7 +363,7 @@ body {
   font-size: 0.9rem;
 }
 
-/* Tray icon buttons (favourite star / remove) — ghost, no chrome */
+/* Tray remove (✕) button — ghost, no chrome */
 .tray-item button {
   font: inherit;
   font-size: 1rem;
