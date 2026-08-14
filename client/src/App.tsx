@@ -9,6 +9,7 @@ import GifPreview from './components/GifPreview';
 import OverlayUpload from './components/OverlayUpload';
 import SocialHeader from './components/SocialHeader';
 import SearchModeToggle from './components/SearchModeToggle';
+import SiteFooter from './components/SiteFooter';
 
 export default function App() {
   const [searchResults, setSearchResults] = useState<Album[]>([]);
@@ -218,6 +219,7 @@ export default function App() {
       </button>
       {gifUrl && <SpeedControl valueMs={frameDelayMs} onChange={handleSpeed} />}
       <GifPreview gifUrl={gifUrl} building={isBuilding} />
+      <SiteFooter />
 
     </div>
   );

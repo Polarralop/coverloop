@@ -98,6 +98,32 @@ body {
   white-space: nowrap;
 }
 
+/* The grid cell now holds the card plus its attribution line (Discogs results
+   carry a required credit link), so the wrapper is the grid child, not the
+   card. Stretching the button keeps cards the same width as before. */
+.album-card-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0; /* let the card's ellipsis truncation still kick in */
+}
+
+.source-credit {
+  color: #7d7d7d;
+  font-size: 0.7rem;
+  text-decoration: none;
+  padding: 2px 6px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.source-credit:hover {
+  color: #4a9eff;
+  text-decoration: underline;
+}
+
 .album-card {
   background: none;
   color: inherit;
@@ -401,4 +427,102 @@ body {
 
 @keyframes pulse {
   50% { opacity: 0.5; }
+}
+
+/* --- Footer: Deezer badge + legal notice ---------------------------------- */
+
+.site-footer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid #26272a;
+  text-align: left;
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* Required Deezer logo. Keep it visible — see DeezerBadge.tsx. */
+.deezer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #7d7d7d;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.deezer-badge:hover {
+  color: #e8e8e8;
+}
+
+.deezer-badge img {
+  display: block;
+  height: 20px;
+  width: auto;
+}
+
+/* Wordmark shown only while the official asset is missing from public/brand. */
+.deezer-badge__fallback {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #c9c9c9;
+}
+
+.legal-link {
+  font: inherit;
+  font-size: 0.9rem;
+  color: #9a9a9a;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.15s ease;
+}
+
+.legal-link:hover {
+  color: #e8e8e8;
+}
+
+.legal-notice {
+  margin-top: 20px;
+  padding: 20px 24px;
+  background: #1a1a1a;
+  border: 1px solid #26272a;
+  border-radius: 8px;
+  color: #a8a8a8;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.legal-notice h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #e8e8e8;
+}
+
+.legal-notice h3 {
+  margin: 20px 0 6px;
+  font-size: 0.95rem;
+  color: #e8e8e8;
+}
+
+.legal-notice p {
+  margin: 0 0 10px;
+}
+
+.legal-notice a {
+  color: #4a9eff;
+  text-decoration: none;
+}
+
+.legal-notice a:hover {
+  text-decoration: underline;
 }

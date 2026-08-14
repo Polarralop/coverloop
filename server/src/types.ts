@@ -5,6 +5,15 @@ export interface Album {
   artist?: string;
   artworkUrl: string;
   artworkUrlHiRes: string;
+
+  /** Which API produced this result. Only set by sources whose terms require an
+   *  attribution rendered next to the data itself — today that's Discogs, whose
+   *  API terms ask for a "Data provided by Discogs" credit linking back to the
+   *  matching discogs.com page. The other sources are credited in the client's
+   *  Legal & Attribution notice instead. */
+  source?: 'discogs';
+  /** Canonical page on the source's own site, for that credit link. */
+  sourceUrl?: string;
 }
 
 /** Body of POST /api/gif (validate this in routes/gif.ts before trusting it —
@@ -26,6 +35,7 @@ export interface DiscogsResult {
   title?: string;          // combined "Artist - Album Title"
   cover_image?: string;
   thumb?: string;
+  uri?: string;            // site path for this release, e.g. /Nirvana-Nevermind/release/12345
 }
 
 export interface DeezerAlbumResult {
